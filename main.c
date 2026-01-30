@@ -1,7 +1,58 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 #define INPUT_LENGTH 1000
+#define INT 0
+#define OP 1
+
+
+typedef struct{
+  int type; // puede ser INT o OP
+  char operator_value;
+  int number_value;
+}Token;
+
+int current_pos=0;
+Token current_token;
+
+bool is_digit(char c){
+
+  return (c >= '0' && c <= '9');
+}
+
+// obtiene el token actual y avanza el puntero de current_pos
+void get_next_token(char *text)
+{
+  char c = text[current_pos];
+  if (is_digit(c)){
+    current_token.type = INT;
+    current_token.number_value = c - '0';
+    // Cada char tiene su valor decimal,
+    // el y los valores de los numeros estan seguidos
+    // por eso devuelve el numero correcto esta resta
+  }
+  else {
+    current_token.type = OP;
+    current_token.operator_value = c;
+  }
+}
+
+void parse(int type){
+  if (current_token.type != type)
+  { //PASAR A STRING EL VALOR DEL TOKEN PARA ENTENDER EL ERROR
+    printf("Syntax error: Expected token of type %d, but recieved type %d\n", type, current_token.type);
+    exit(EXIT_FAILURE);
+  }
+}
+void interpret(char *text)
+{
+  // desde el texto input, creamos tokens:
+  // tokenizer( pasa texto a token);
+  get_next_token(text); // debe ser un int
+  parse(INT);
+  printf("type=%d, value=%d\n", current_token.type, current_token.number_value);
+ }
 
 int main()
 {
@@ -13,7 +64,6 @@ int main()
     // No uso scanf porque eso ya es en si mismo
     // un "interprete"
     fgets(s, INPUT_LENGTH, stdin);
+    interpret(s);
   }
-
-
 }
