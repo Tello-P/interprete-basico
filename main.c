@@ -3,9 +3,11 @@
 #include <stdlib.h>
 
 #define INPUT_LENGTH 1000
+
 #define INT 0
 #define OP 1
-
+#define INT_STR "INT"
+#define OP_STR "OP"
 
 typedef struct{
   int type; // puede ser INT o OP
@@ -28,20 +30,31 @@ void get_next_token(char *text)
   if (is_digit(c)){
     current_token.type = INT;
     current_token.number_value = c - '0';
+    current_token.operator_value = ' ';
     // Cada char tiene su valor decimal,
     // el y los valores de los numeros estan seguidos
     // por eso devuelve el numero correcto esta resta
   }
   else {
     current_token.type = OP;
+    current_token.number_value = 0;
     current_token.operator_value = c;
   }
 }
 
+// Representa el token como un string s
+void token_to_str(Token token, char *s)
+{
+  sprintf(s, "Token (type=%s, number_value=%d, operator_value=%s)", INT ? INT_STR: OP_STR, token.number_value, &token.operator_value);
+}
+
+
 void parse(int type){
   if (current_token.type != type)
   { //PASAR A STRING EL VALOR DEL TOKEN PARA ENTENDER EL ERROR
-    printf("Syntax error: Expected token of type %d, but recieved type %d\n", type, current_token.type);
+    char token_str[100];
+    token_to_str(current_token, token_str);
+    printf("Syntax error at pos %d: Expected token of type %d, but recieved %s\n",current_pos, type, token_str);
     exit(EXIT_FAILURE);
   }
 }
