@@ -42,8 +42,16 @@ void get_next_token(char *text)
   }
 
   if (is_digit(c)){
+    int current_number = c - '0';
+    current_pos += 1;
+    while (is_digit(text[current_pos])){
+      current_number *= 10;
+      current_number += (text[current_pos] - '0');
+      current_pos += 1;
+    }
+    current_pos -= 1;
     current_token.type = INT;
-    current_token.number_value = c - '0';
+    current_token.number_value = current_number;
     current_token.operator_value = ' ';
     // Cada char tiene su valor decimal,
     // el y los valores de los numeros estan seguidos
