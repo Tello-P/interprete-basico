@@ -6,7 +6,6 @@
 
 #define INT 0
 #define OP 1
-#define ERR -1
 #define INT_STR "INT"
 #define OP_STR "OP"
 
@@ -46,7 +45,8 @@ void get_next_token(char *text)
     current_token.operator_value = c;
   }
   else{
-    current_token.type = ERR;
+    printf("Invalid token recieved at pos %d: %c\n",current_pos, c);
+    exit(EXIT_FAILURE);
   }
   current_pos += 1;
 }
