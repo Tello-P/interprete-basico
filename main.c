@@ -67,7 +67,7 @@ void parse(int type){
     exit(EXIT_FAILURE);
   }
 }
-void interpret(char *text)
+int interpret(char *text)
 {
   // desde el texto input, creamos tokens:
   // tokenizer( pasa texto a token);
@@ -84,18 +84,28 @@ void interpret(char *text)
   int right = current_token.number_value;
 
   current_pos = 0;
+
+  int result;
+  if (operator == '+')
+    result = left + right;
+  else
+    result = left - right;
+  return result;
 }
 
 int main()
 {
   char s[INPUT_LENGTH];
   printf("Intrerpreter running...");
+    
+  int result;
   while (true) 
   {
     printf(">>> ");
     // No uso scanf porque eso ya es en si mismo
     // un "interprete"
     fgets(s, INPUT_LENGTH, stdin);
-    interpret(s);
+    result = interpret(s);
+    printf("%d\n", result);
   }
 }
