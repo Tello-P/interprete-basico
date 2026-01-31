@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <string.h> // Metodo strlen,
 
 #define INPUT_LENGTH 1000
 
@@ -85,29 +86,33 @@ void parse(int type){
     exit(EXIT_FAILURE);
   }
 }
+
+
 int interpret(char *text)
 {
+  int result=0;
   // desde el texto input, creamos tokens:
   // tokenizer( pasa texto a token);
   get_next_token(text); // debe ser un int
   parse(INT);
-  int left = current_token.number_value;
-  
-  get_next_token(text); // debe ser un operador
-  parse(OP);
-  char operator = current_token.operator_value;
+  result += current_token.number_value;
 
-  get_next_token(text); // debe ser un int
-  parse(INT);
-  int right = current_token.number_value;
+  int len = strlen(text);
+  while (current_pos < len-1){
+    get_next_token(text); // debe ser un operador
+    parse(OP);
+    char operator = current_token.operator_value;
 
-  current_pos = 0;
+    get_next_token(text); // debe ser un int
+    parse(INT);
+    int operand = current_token.number_value;
 
-  int result;
-  if (operator == '+')
-    result = left + right;
-  else
-    result = left - right;
+
+    if (operator == '+')
+      result += operand;
+    else
+      result -= operand;
+  }
   return result;
 }
 
@@ -119,6 +124,7 @@ int main()
   int result;
   while (true) 
   {
+    current_pos = 0;
     printf(">>> ");
     // No uso scanf porque eso ya es en si mismo
     // un "interprete"
