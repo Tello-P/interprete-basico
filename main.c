@@ -26,11 +26,21 @@ bool is_operator(char c)
 {
   return c=='+' || c == '-';
 }
+bool is_whitespace(char c)
+{
+  return c == ' ';
+}
+
 
 // obtiene el token actual y avanza el puntero de current_pos
 void get_next_token(char *text)
 {
   char c = text[current_pos];
+  while (is_whitespace(c)){
+    current_pos += 1;
+    c = text[current_pos];
+  }
+
   if (is_digit(c)){
     current_token.type = INT;
     current_token.number_value = c - '0';
