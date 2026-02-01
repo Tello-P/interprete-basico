@@ -25,7 +25,7 @@ bool is_digit(char c){
 }
 bool is_operator(char c)
 {
-  return c=='+' || c == '-';
+  return (c=='+' || c == '-') || (c == '*' || c == '/');
 }
 bool is_whitespace(char c)
 {
@@ -88,14 +88,14 @@ void parse(int type){
 }
 
 
-int interpret(char *text)
+double interpret(char *text)
 {
-  int result=0;
+  double result=0.0;
   // desde el texto input, creamos tokens:
   // tokenizer( pasa texto a token);
   get_next_token(text); // debe ser un int
   parse(INT);
-  result += current_token.number_value;
+  result += (double) current_token.number_value;
 
   int len = strlen(text);
   while (current_pos < len-1){
@@ -105,13 +105,17 @@ int interpret(char *text)
 
     get_next_token(text); // debe ser un int
     parse(INT);
-    int operand = current_token.number_value;
+    double operand = current_token.number_value;
 
 
     if (operator == '+')
       result += operand;
-    else
+    else if (operator == '-')
       result -= operand;
+    else if (operator == '*')
+        result *= operand;
+    else
+      result /= operand;
   }
   return result;
 }
@@ -121,7 +125,7 @@ int main()
   char s[INPUT_LENGTH];
   printf("Intrerpreter running...");
     
-  int result;
+  double result;
   while (true) 
   {
     current_pos = 0;
@@ -130,6 +134,6 @@ int main()
     // un "interprete"
     fgets(s, INPUT_LENGTH, stdin);
     result = interpret(s);
-    printf("%d\n", result);
+    printf("%f\n", result);
   }
 }
