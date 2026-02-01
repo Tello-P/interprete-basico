@@ -18,6 +18,7 @@ typedef struct{
 
 int current_pos=0;
 Token current_token;
+bool error;
 
 bool is_digit(char c){
 
@@ -64,8 +65,12 @@ void get_next_token(char *text)
     current_token.operator_value = c;
   }
   else{
-    printf("Invalid token recieved at pos %d: %c\n",current_pos, c);
-    exit(EXIT_FAILURE);
+    printf("Invalid token recieved at pos %d: %c\n",current_pos+1, c);
+    if (c == '\n') {
+      printf("Add an operator or a number\n");
+    }
+    //exit(EXIT_FAILURE);
+    error=true;
   }
   current_pos += 1;
 }
@@ -83,7 +88,8 @@ void parse(int type){
     char s[100];
     token_to_str(current_token, s);
     printf("Syntax error at pos %d: Expected token of type %s, but recieved %s\n",current_pos, type == INT ? INT_STR : OP_STR, s);
-    exit(EXIT_FAILURE);
+    //exit(EXIT_FAILURE);
+    error = true;
   }
 }
 
@@ -94,17 +100,30 @@ double interpret(char *text)
   // desde el texto input, creamos tokens:
   // tokenizer( pasa texto a token);
   get_next_token(text); // debe ser un int
+  if (error)
+    return -1;
+
   parse(INT);
+  if (error)
+    return -1;
   result += (double) current_token.number_value;
 
   int len = strlen(text);
   while (current_pos < len-1){
     get_next_token(text); // debe ser un operador
+    if (error)
+      return -1;
     parse(OP);
+    if (error)
+      return -1;
     char operator = current_token.operator_value;
 
     get_next_token(text); // debe ser un int
+    if (error)
+      return -1;
     parse(INT);
+    if (error)
+      return -1;
     double operand = current_token.number_value;
 
 
@@ -128,12 +147,14 @@ int main()
   double result;
   while (true) 
   {
+    error = false;
     current_pos = 0;
     printf(">>> ");
     // No uso scanf porque eso ya es en si mismo
     // un "interprete"
     fgets(s, INPUT_LENGTH, stdin);
     result = interpret(s);
-    printf("%f\n", result);
+    if (!error)
+      printf("%f\n", result);
   }
 }

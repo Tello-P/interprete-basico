@@ -44,6 +44,5 @@ A través de la implementación de este código, se han puesto en práctica los 
 
 ## Posibles Mejoras
 
-* Añadir soporte para operaciones de multiplicación y división.
 * Implementar el uso de paréntesis para manejar la precedencia de operadores.
 * Mejorar el manejo de errores para que el programa no finalice ante una entrada inválida, sino que permita reintentarlo.
